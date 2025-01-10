@@ -1,0 +1,70 @@
+﻿<Window x:Class="Exam_janvier_2023.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Exam_janvier_2023"
+        mc:Ignorable="d"
+        Title="Product Management" Height="600" Width="900">
+
+    <!-- Resource Definitions -->
+    <Window.Resources>
+        <DataTemplate x:Key="listTemplate">
+            <StackPanel Orientation="Horizontal" Margin="0 5 0 5">
+                <TextBlock Text="{Binding DisplayProductID}" Width="30"/>
+                <TextBlock Text="{Binding DisplayProductName}" Width="150"/>
+            </StackPanel>
+        </DataTemplate>
+        <local:NullToBoolConverter x:Key="NullToBoolConverter" />
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Products ComboBox -->
+        <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
+            <ComboBox 
+    ItemsSource="{Binding ProductsList}" 
+    SelectedItem="{Binding SelectedProduct}" 
+    DisplayMemberPath="DisplayProductName"
+    Width="250" />
+
+        </StackPanel>
+
+        <!-- Selected Product Details -->
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
+            <TextBlock Text="Product Details:" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock Text="{Binding SelectedProduct.DisplayProductID, StringFormat='ProductID: {0}'}" />
+            <TextBlock Text="{Binding SelectedProduct.DisplayProductName, StringFormat='ProductName: {0}'}" />
+            <TextBlock Text="{Binding SelectedProduct.DisplayCategory, StringFormat='Category: {0}'}" />
+            <TextBlock Text="{Binding SelectedProduct.DisplaySupplier, StringFormat='Supplier: {0}'}" />
+        </StackPanel>
+
+        <!-- Discontinue Button -->
+        <StackPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="5">
+            <Button Content="Discontinue Selected Product"
+                    Command="{Binding DiscontinueCommand}" 
+                    IsEnabled="{Binding SelectedProduct, Converter={StaticResource NullToBoolConverter}}" 
+                    Width="200" />
+        </StackPanel>
+
+        <!-- Product Count by Country -->
+        <StackPanel Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Margin="5">
+            <TextBlock Text="Number of Products Sold by Country:" FontWeight="Bold" Margin="0,0,0,10"/>
+            <DataGrid ItemsSource="{Binding ProductCountByCountry}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Country" Binding="{Binding Country}" Width="*" />
+                    <DataGridTextColumn Header="Count" Binding="{Binding ProductCount}" Width="Auto" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>
